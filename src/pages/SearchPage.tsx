@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FoodCard } from '@/components/FoodCard';
+import { FoodDetailModal } from '@/components/FoodDetailModal';
+import { MapView } from '@/components/MapView';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +29,7 @@ export const SearchPage = () => {
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
   const [showMap, setShowMap] = useState(false);
+  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -82,7 +85,7 @@ export const SearchPage = () => {
   }, [query, debouncedSearch]);
 
   const handleFoodClick = (foodId: string) => {
-    navigate(`/food/${foodId}`);
+    setSelectedFoodId(foodId);
   };
 
   return (
@@ -144,17 +147,12 @@ export const SearchPage = () => {
           </div>
         )}
 
-        {/* Map Placeholder */}
+        {/* Map View */}
         {showMap && query && results.length > 0 && (
-          <div className="bg-muted rounded-lg p-8 text-center space-y-4">
-            <Map className="h-12 w-12 mx-auto text-muted-foreground" />
-            <div>
-              <h3 className="font-semibold">Map View</h3>
-              <p className="text-sm text-muted-foreground">
-                Map integration coming soon! See nearby restaurants with your searched dishes.
-              </p>
-            </div>
-          </div>
+          <MapView 
+            foods={results} 
+            onFoodSelect={handleFoodClick}
+          />
         )}
 
         {/* Results Grid */}
@@ -203,6 +201,13 @@ export const SearchPage = () => {
           </div>
         )}
       </div>
+
+      {/* Food Detail Modal */}
+      <FoodDetailModal
+        foodId={selectedFoodId}
+        isOpen={!!selectedFoodId}
+        onClose={() => setSelectedFoodId(null)}
+      />
     </div>
   );
 };

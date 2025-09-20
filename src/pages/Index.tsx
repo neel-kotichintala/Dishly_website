@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, TrendingUp, Users, ChefHat } from 'lucide-react';
+import { Search, TrendingUp, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import { FoodCard } from '@/components/FoodCard';
-import { Link, useNavigate } from 'react-router-dom';
+import { FoodDetailModal } from '@/components/FoodDetailModal';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,6 +23,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [hotFoods, setHotFoods] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -62,7 +64,7 @@ const Index = () => {
   };
 
   const handleFoodClick = (foodId: string) => {
-    navigate(`/food/${foodId}`);
+    setSelectedFoodId(foodId);
   };
 
   return (
@@ -146,59 +148,37 @@ const Index = () => {
         )}
       </section>
 
-      {/* Stats Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12,847</div>
-            <p className="text-xs text-muted-foreground">+20% from last month</p>
-          </CardContent>
-        </Card>
+      {/* Recommended for You Section */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-primary" />
+          <h2 className="text-xl font-semibold">Recommended for You</h2>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Hot Dishes</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{hotFoods.length}</div>
-            <p className="text-xs text-muted-foreground">Trending this week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Restaurants</CardTitle>
-            <ChefHat className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">156</div>
-            <p className="text-xs text-muted-foreground">In West Lafayette</p>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* CTA Section */}
-      <section className="text-center space-y-4 py-8">
-        <h2 className="text-2xl font-semibold">Ready to share your taste?</h2>
-        <p className="text-muted-foreground">Join thousands of food lovers and discover your next favorite dish</p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/auth">
-            <Button variant="hero" className="w-full sm:w-auto">
-              Get Started
-            </Button>
-          </Link>
-          <Link to="/search">
-            <Button variant="outline" className="w-full sm:w-auto">
-              Explore Foods
-            </Button>
-          </Link>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {hotFoods.slice(0, 4).map((food: any) => (
+            <FoodCard
+              key={`rec-${food.id}`}
+              id={food.id}
+              name={food.name}
+              restaurant={food.restaurants?.name}
+              image={food.image_url}
+              rating={food.avg_rating || 0}
+              ratingCount={food.rating_count || 0}
+              tags={food.tags || []}
+              price={food.price}
+              onClick={() => handleFoodClick(food.id)}
+            />
+          ))}
         </div>
       </section>
+
+      {/* Food Detail Modal */}
+      <FoodDetailModal
+        foodId={selectedFoodId}
+        isOpen={!!selectedFoodId}
+        onClose={() => setSelectedFoodId(null)}
+      />
     </div>
   );
 };
