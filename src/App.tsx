@@ -5,6 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { Layout } from "./components/Layout";
+import { SearchPage } from "./pages/SearchPage";
+import { RatePage } from "./pages/RatePage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { FoodDetailPage } from "./pages/FoodDetailPage";
+import { AuthPage } from "./pages/AuthPage";
 
 const queryClient = new QueryClient();
 
@@ -15,9 +21,16 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Index />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/rate" element={<RatePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/food/:id" element={<FoodDetailPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

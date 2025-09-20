@@ -1,0 +1,889 @@
+{
+  "city": "West Lafayette, IN",
+  "generated_at": "2025-09-12T18:51:52.759097",
+  "restaurants": [
+    {
+      "name": "Triple XXX Family Restaurant",
+      "website": "https://www.triplexxxfamilyrestaurant.com/",
+      "menus": [
+        {
+          "section": "Choice Cuts",
+          "source": "https://www.triplexxxfamilyrestaurant.com/menu/",
+          "items": [
+            {
+              "name": "The Barney Burger",
+              "price": null,
+              "description": "A 1/4lb. chop steak, cheese and grilled onions."
+            },
+            {
+              "name": "Chop Steak",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Double Steak",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Chop Steak w/ Cheese",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Patty Melt",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Grilled Cheese",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Hot Dog",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Breaded Tenderloin",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "The Double Cheese Chop-Steak",
+              "price": null,
+              "description": "Double chop steak patties & American cheese on a toasty sesame bun."
+            },
+            {
+              "name": "Homemade Pork BBQ",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "The Triple XXX Chili Dog",
+              "price": null,
+              "description": "All-beef hot dog with Triple XXX Chili, cheese and onions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nine Irish Brothers (West Lafayette)",
+      "website": "https://www.nineirishbrothers.com/",
+      "menus": [
+        {
+          "section": "Appetizers (Regular Menu)",
+          "source": "https://www.nineirishbrothers.com/menus/regular-menu",
+          "items": [
+            {
+              "name": "Boat of Wings",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Irish Pizza",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Chicken Goujons",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Mussels in Garlic Cream Sauce",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Goat Cheese Fritters",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Smoked Salmon",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Irish Nachos",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Pub Chip Plate",
+              "price": null,
+              "description": null
+            }
+          ]
+        },
+        {
+          "section": "Sides (Toast ordering)",
+          "source": "https://order.toasttab.com/online/nine-irish-brothers-west-lafayette",
+          "items": [
+            {
+              "name": "Side of Cole Slaw",
+              "price": 3.99,
+              "description": null
+            },
+            {
+              "name": "Side of Gravy",
+              "price": 2.99,
+              "description": null
+            },
+            {
+              "name": "Side of Mashed Potatoes",
+              "price": 3.99,
+              "description": null
+            },
+            {
+              "name": "Side of Pub Chips",
+              "price": 5.99,
+              "description": null
+            },
+            {
+              "name": "Side of Veggies",
+              "price": 4.99,
+              "description": null
+            },
+            {
+              "name": "Side Sauerkraut",
+              "price": 3.99,
+              "description": null
+            },
+            {
+              "name": "Side of Steamed Cabbage",
+              "price": 4.49,
+              "description": null
+            },
+            {
+              "name": "Slice of Soda Bread",
+              "price": 1.99,
+              "description": null
+            },
+            {
+              "name": "White Toast",
+              "price": 1.59,
+              "description": null
+            },
+            {
+              "name": "Rye Toast",
+              "price": 1.99,
+              "description": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Greyhouse Coffee & Supply Co. (Chauncey Village)",
+      "website": "https://greyhousecoffee.com/",
+      "menus": [
+        {
+          "section": "Coffee (Toast online)",
+          "source": "https://order.toasttab.com/online/greyhousecoffee",
+          "items": [
+            {
+              "name": "Espresso (Double-shot 2oz)",
+              "price": 3.5,
+              "description": null
+            },
+            {
+              "name": "Espresso Macchiato (3oz)",
+              "price": 3.5,
+              "description": "Double espresso marked with foam."
+            },
+            {
+              "name": "Cortado (5oz)",
+              "price": 4.0,
+              "description": "Double espresso cut w/ steamed milk."
+            },
+            {
+              "name": "The Grey Capp (8oz)",
+              "price": 4.5,
+              "description": "Signature double-ristretto cappuccino."
+            },
+            {
+              "name": "Americano (8 oz)",
+              "price": 3.75,
+              "description": "Double espresso with water. Hot or iced."
+            },
+            {
+              "name": "Americano (12 oz)",
+              "price": 3.75,
+              "description": "Double espresso with water. Hot or iced."
+            }
+          ]
+        },
+        {
+          "section": "Espresso (Toast) - More",
+          "source": "https://order.toasttab.com/online/greyhousecoffee",
+          "items": [
+            {
+              "name": "The Grey Capp (8oz)",
+              "price": 4.5,
+              "description": "Signature double-ristretto cappuccino."
+            },
+            {
+              "name": "Americano (8 oz)",
+              "price": 3.75,
+              "description": "Double espresso with water. Hot or iced."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mad Mushroom (West Lafayette/Purdue)",
+      "website": "https://www.madmushroom.com/west-lafayette",
+      "menus": [
+        {
+          "section": "Featured Items (DoorDash)",
+          "source": "https://www.doordash.com/store/mad-mushroom-pizza-west-lafayette-25106352/",
+          "items": [
+            {
+              "name": "14\" Large Pizza",
+              "price": 17.5,
+              "description": null
+            },
+            {
+              "name": "12\" Medium Pizza",
+              "price": 13.75,
+              "description": null
+            },
+            {
+              "name": "10\" Small Pizza",
+              "price": 12.5,
+              "description": null
+            },
+            {
+              "name": "10\" Small Cheesestix",
+              "price": 11.25,
+              "description": null
+            }
+          ]
+        },
+        {
+          "section": "Grinders (site menu)",
+          "source": "https://www.madmushroom.com/menu",
+          "items": [
+            {
+              "name": "BBQ Chicken Grinder",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Italian Club Grinder",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Ham & Cheese Grinder",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Mad Cheesesteak Grinder",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Kentucky Hot Brown Grinder",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "A.D.'s Grilled Cheese",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Marty's Meatless Grinder",
+              "price": null,
+              "description": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Maru Sushi",
+      "website": "https://www.marusushiin.com/",
+      "menus": [
+        {
+          "section": "Lunch Boxes (3rd-party)",
+          "source": "https://www.grubhub.com/restaurant/maru-sushi-102-n-chauncey-ave-ste-d-west-lafayette/1247774",
+          "items": [
+            {
+              "name": "Salmon Teriyaki Lunch Box",
+              "price": 12.95,
+              "description": null
+            },
+            {
+              "name": "Shrimp Tempura Lunch Box",
+              "price": 11.95,
+              "description": null
+            },
+            {
+              "name": "Bulgoki Lunch Box",
+              "price": 11.95,
+              "description": null
+            },
+            {
+              "name": "Chicken Teriyaki Lunch Box",
+              "price": 11.95,
+              "description": null
+            }
+          ]
+        },
+        {
+          "section": "Appetizers (Clover ordering)",
+          "source": "https://www.clover.com/online-ordering/maru-sushi-west-lafayette",
+          "items": [
+            {
+              "name": "Edamame",
+              "price": 3.95,
+              "description": "Lightly salted boiled green soybean."
+            },
+            {
+              "name": "Gyoza",
+              "price": 6.95,
+              "description": "5 pieces of beef & vegetable dumplings with house soy sauce."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Tap - West Lafayette",
+      "website": "https://thetapbeerbar.com/locations/west-lafayette/",
+      "menus": [
+        {
+          "section": "Menu (site)",
+          "source": "https://thetapbeerbar.com/food/",
+          "items": [
+            {
+              "name": "Tap Fries",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Tap Tots",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Brussels Sprouts",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Mac n\u2019 Beer Cheese",
+              "price": null,
+              "description": null
+            }
+          ]
+        },
+        {
+          "section": "Featured Items (DoorDash)",
+          "source": "https://www.doordash.com/store/the-tap-west-lafayette-28005320/",
+          "items": [
+            {
+              "name": "Angus Sliders (3)",
+              "price": 18.71,
+              "description": null
+            },
+            {
+              "name": "Beer Cheese Burger",
+              "price": 19.07,
+              "description": null
+            },
+            {
+              "name": "Pretzel Sticks + Beer Cheese",
+              "price": 13.07,
+              "description": null
+            },
+            {
+              "name": "Tapadilla",
+              "price": 16.67,
+              "description": null
+            },
+            {
+              "name": "Tap Mac Bowl",
+              "price": 11.87,
+              "description": null
+            },
+            {
+              "name": "Cali Club",
+              "price": 18.35,
+              "description": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Town & Gown Bistro",
+      "website": "https://townandgownbistro.com/",
+      "menus": [
+        {
+          "section": "Food Menu (site)",
+          "source": "https://townandgownbistro.com/west-lafayette-chauncey-town-and-gown-bistro-food-menu",
+          "items": [
+            {
+              "name": "Grilled Salmon",
+              "price": 16.95,
+              "description": "Fresh salmon filet on mixed greens with vinaigrette."
+            },
+            {
+              "name": "Black Bean Burger",
+              "price": 12.95,
+              "description": "Served with Home Fried potatoes."
+            },
+            {
+              "name": "T&G Reuben",
+              "price": 14.25,
+              "description": "In-house-roasted corned beef, sauerkraut, provolone, house dressing. Served with Home Fries."
+            },
+            {
+              "name": "Prime Black Angus New York Strip",
+              "price": 28.95,
+              "description": "Served with saut\u00e9ed mushrooms & onions with potatoes."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Parthenon Greek American Grill",
+      "website": "https://www.parthenongrill.com/",
+      "menus": [
+        {
+          "section": "Platters (site)",
+          "source": "https://www.parthenongrill.com/our-menu/",
+          "items": [
+            {
+              "name": "Gyros Platter",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "Grilled Chicken Kebob Platter",
+              "price": null,
+              "description": "Chicken breast skewers with spinach rice and oven-browned potatoes."
+            },
+            {
+              "name": "Grilled Pork Kebob Platter",
+              "price": null,
+              "description": "Pork medallion skewers with spinach rice and oven-browned potatoes."
+            },
+            {
+              "name": "Parthenon Combo Platter",
+              "price": null,
+              "description": "Pastitsio, mousaka, rice pilaf, gyros, stuffed grape leaf, and choice of cheese or spinach pie."
+            }
+          ]
+        },
+        {
+          "section": "Online Ordering (full categories)",
+          "source": "https://www.orderstart.com/parthenongrill",
+          "items": []
+        }
+      ]
+    },
+    {
+      "name": "Harry's Chocolate Shop (Kitchen)",
+      "website": "https://www.harryschocolateshop.com/",
+      "menus": [
+        {
+          "section": "Food (site)",
+          "source": "https://www.harryschocolateshop.com/menu",
+          "items": [
+            {
+              "name": "Stromboli",
+              "price": 8.0,
+              "description": "Italian Sausage, marinara, onion, green pepper, mozzarella on a French roll."
+            },
+            {
+              "name": "Jumbo All Beef Vienna Dog",
+              "price": 4.0,
+              "description": null
+            },
+            {
+              "name": "Chicago Dog",
+              "price": 5.0,
+              "description": "Vienna Dog with sport peppers, relish, onion, tomato, mustard, pickle."
+            },
+            {
+              "name": "BBQ Pulled Pork Platter",
+              "price": 9.5,
+              "description": "6 oz. pulled pork with pickle & onion. Served with gravy fries."
+            },
+            {
+              "name": "Fried Catfish Platter",
+              "price": 8.0,
+              "description": "5 oz. boneless filet, freshly breaded. Served with gravy fries."
+            },
+            {
+              "name": "Fried Chicken Platter",
+              "price": 8.25,
+              "description": "6 oz. boneless filet, freshly breaded. Served with gravy fries."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Another Broken Egg Cafe (West Lafayette)",
+      "website": "https://www.anotherbrokenegg.com/locations/west-lafayette-in/",
+      "menus": [
+        {
+          "section": "Online Menu (olo.com)",
+          "source": "https://anotherbrokeneggcafe.olo.com/menu/west-lafayette",
+          "items": [
+            {
+              "name": "Biscuit Beignets",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "2-Stack Indulgences Pancakes",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "City Grits",
+              "price": null,
+              "description": null
+            },
+            {
+              "name": "House-Made Sweet ...",
+              "price": null,
+              "description": null
+            }
+          ]
+        },
+        {
+          "section": "DoorDash (sample prices)",
+          "source": "https://www.doordash.com/store/another-broken-egg-cafe-west-lafayette-406477/",
+          "items": [
+            {
+              "name": "Traditional Day Starter",
+              "price": 14.99,
+              "description": null
+            },
+            {
+              "name": "Eggs Benedict",
+              "price": 17.87,
+              "description": null
+            },
+            {
+              "name": "Huevos Rancheros",
+              "price": 17.87,
+              "description": null
+            },
+            {
+              "name": "Broken Egg Biscuit Sandwich",
+              "price": null,
+              "description": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Bryant Food & Drink Company",
+      "website": "https://www.thebryantwl.com/",
+      "menus": [
+        {
+          "section": "Starters (Toast)",
+          "source": "https://order.toasttab.com/online/the-bryant-food-drink-company-1820-sagamore-pkwy-w",
+          "items": [
+            {
+              "name": "Arancini (Fried Rice Balls)",
+              "price": 12.0,
+              "description": "Arborio rice, Bolognese, ground pork, mozzarella, tomato cream."
+            },
+            {
+              "name": "Bang Bang Shrimp",
+              "price": 13.0,
+              "description": "Corkscrew shrimp, pico, sweet chili aioli, cotija."
+            },
+            {
+              "name": "Brisket Meatballs",
+              "price": 11.0,
+              "description": "Pomodoro, basil, ricotta, giardiniera, parmesan, crostini."
+            },
+            {
+              "name": "Bucket Of Bones",
+              "price": 17.0,
+              "description": "Wings & ribs with sauces, ranch, skin-on fries."
+            },
+            {
+              "name": "Jumbo Pretzel",
+              "price": 9.0,
+              "description": "Served with smoked cheddar beer cheese."
+            }
+          ]
+        },
+        {
+          "section": "Sandwiches (Toast)",
+          "source": "https://order.toasttab.com/online/the-bryant-food-drink-company-1820-sagamore-pkwy-w",
+          "items": [
+            {
+              "name": "Bombaro Burger",
+              "price": 15.0,
+              "description": "Ghost pepper cheese, pineapple, spicy chili sauce, habanero aioli, jalape\u00f1o, fried cheese curd, potato bun."
+            },
+            {
+              "name": "Chicago Italian Beef",
+              "price": 13.0,
+              "description": "Roast chuck, smoked provolone, peppers, au-jus."
+            },
+            {
+              "name": "Smash Burger",
+              "price": 15.0,
+              "description": "Onion, pickle, bacon, stack sauce, sharp cheddar, potato bun."
+            }
+          ]
+        },
+        {
+          "section": "Pasta & Mains (Toast)",
+          "source": "https://order.toasttab.com/online/the-bryant-food-drink-company-1820-sagamore-pkwy-w",
+          "items": [
+            {
+              "name": "Cajun Shrimp (Large)",
+              "price": 20.0,
+              "description": null
+            },
+            {
+              "name": "Gnocchi",
+              "price": 19.0,
+              "description": "Argentine shrimp, asparagus, lemon pesto, parmesan."
+            },
+            {
+              "name": "Steak Frites",
+              "price": 23.0,
+              "description": "10oz flank steak, chimichurri, truffle fries, garlic aioli."
+            }
+          ]
+        },
+        {
+          "section": "Desserts (Toast)",
+          "source": "https://order.toasttab.com/online/the-bryant-food-drink-company-1820-sagamore-pkwy-w",
+          "items": [
+            {
+              "name": "Chocolate Truffle Cake",
+              "price": 10.0,
+              "description": null
+            },
+            {
+              "name": "Italian Lemon Cake",
+              "price": 9.0,
+              "description": null
+            },
+            {
+              "name": "Almond Bread Pudding",
+              "price": 9.0,
+              "description": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Boilerhouse Prime",
+      "website": "https://www.boilerhouseprime.com/",
+      "menus": [
+        {
+          "section": "Starters (Toast)",
+          "source": "https://www.toasttab.com/local/order/boilerhouse-prime",
+          "items": [
+            {
+              "name": "Smoked Salmon Dip",
+              "price": 13.0,
+              "description": "Boursin, onion, chive, truffle, kennebec chips."
+            },
+            {
+              "name": "Garden Crudit\u00e9",
+              "price": 11.0,
+              "description": "Fresh vegetables, avocado hummus."
+            },
+            {
+              "name": "Burnt Ends",
+              "price": 14.0,
+              "description": "Smoked brisket, house BBQ, pickled onion."
+            },
+            {
+              "name": "Deviled Eggs",
+              "price": 12.0,
+              "description": null
+            },
+            {
+              "name": "Jumbo Lump Crab Toast",
+              "price": 21.0,
+              "description": null
+            }
+          ]
+        },
+        {
+          "section": "Salads & Soup (Toast)",
+          "source": "https://www.toasttab.com/local/order/boilerhouse-prime",
+          "items": [
+            {
+              "name": "Caesar",
+              "price": 13.0,
+              "description": "Romaine hearts, roasted garlic dressing, lemon, migas croutons."
+            },
+            {
+              "name": "Green Goddess",
+              "price": 14.0,
+              "description": "Kale, snap pea, celery, avocado, pistachio, parmesan, herb dressing."
+            },
+            {
+              "name": "Southwest",
+              "price": 15.0,
+              "description": "Grilled corn, avocado, black bean, romaine, cilantro dressing, cotija."
+            },
+            {
+              "name": "Roasted Tomato Bisque",
+              "price": 10.0,
+              "description": "Basil oil, grana padano."
+            }
+          ]
+        },
+        {
+          "section": "Signatures (Toast)",
+          "source": "https://www.toasttab.com/local/order/boilerhouse-prime",
+          "items": [
+            {
+              "name": "Famous French Dip Au Jus",
+              "price": 17.0,
+              "description": "Thinly sliced prime rib, toasted French roll."
+            },
+            {
+              "name": "Shrimp & Lobster Roll",
+              "price": 25.0,
+              "description": "Citrus mayo on New England bun, celery salt."
+            },
+            {
+              "name": "BCR Wagyu Sliders",
+              "price": 18.0,
+              "description": "Grilled red onion, tomato jam, aged cheddar."
+            },
+            {
+              "name": "Ahi Tuna Poke Bowl",
+              "price": 18.0,
+              "description": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Original Bruno's Pizza",
+      "website": "https://www.brunodough.com/",
+      "menus": [
+        {
+          "section": "Appetizers (UberEats)",
+          "source": "https://www.ubereats.com/store/brunos-pizza-and-big-os-sports-room/A1hKkeWbQrC-8CTTb7P6aQ",
+          "items": [
+            {
+              "name": "Bruno Dough (8 oz)",
+              "price": null,
+              "description": "Famous deep-fried pizza dough, garlic butter & parmesan, choice of dipping sauce."
+            },
+            {
+              "name": "Homemade Breadsticks",
+              "price": null,
+              "description": "Served with choice of cheese, meat, marinara, or garlic butter."
+            },
+            {
+              "name": "Cheddar Cheese Balls",
+              "price": null,
+              "description": "Served with sour cream and cocktail sauce."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sakanaya Izakaya",
+      "website": "https://sakanaya-izakaya.res-menu.com/menu",
+      "menus": [
+        {
+          "section": "Specialty Maki (DoorDash)",
+          "source": "https://www.doordash.com/store/sakanaya-izakaya-west-lafayette-27735808/",
+          "items": [
+            {
+              "name": "Chahan (Stone Bowl Fried Rice)",
+              "price": 13.0,
+              "description": "Japanese-style fried rice; add chicken, shrimp, or steak."
+            },
+            {
+              "name": "Gyu Itame",
+              "price": 23.0,
+              "description": "8 oz fillet cube, asparagus, black pepper sauce, white rice."
+            },
+            {
+              "name": "Sushi Sashimi Platter",
+              "price": 25.0,
+              "description": "9 pcs sashimi & 5 pcs sushi."
+            },
+            {
+              "name": "Salmon Lover",
+              "price": 16.0,
+              "description": "3 sashimi, 2 sushi & Alaska roll."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Thai Essence",
+      "website": "https://www.thaiessence.net/",
+      "menus": [
+        {
+          "section": "Thai Noodles (indicative)",
+          "source": "https://www.thaiessence.net/menu.html",
+          "items": [
+            {
+              "name": "Pad Thai",
+              "price": null,
+              "description": "Stir-fried rice noodles with egg, bean sprouts, scallion, and ground peanuts in tamarind sauce."
+            },
+            {
+              "name": "Pad See Ew",
+              "price": 14.95,
+              "description": "Rice noodles stir-fried (price observed on lunch noodles page)."
+            },
+            {
+              "name": "Pad Kee Mow",
+              "price": null,
+              "description": "Spicy basil stir-fry noodles."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Whittaker Kitchen",
+      "website": "https://www.thewhittakerinn.com/the-whittaker-kitchen/menu",
+      "menus": [
+        {
+          "section": "Dinner (SinglePlatform sample)",
+          "source": "https://places.singleplatform.com/the-whittaker-kitchen/menu",
+          "items": [
+            {
+              "name": "Mexican Shrimp Cocktail",
+              "price": 9.5,
+              "description": "Poached shrimp in spicy tomato sauce with cilantro & red onion."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
