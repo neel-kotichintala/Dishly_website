@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { FoodCard } from '@/components/FoodCard';
 import { FoodDetailModal } from '@/components/FoodDetailModal';
 import { MapView } from '@/components/MapView';
+import { InteractiveMap } from '@/components/InteractiveMap';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -202,11 +203,10 @@ export const SearchPage = () => {
             <DialogTitle>Results on Map</DialogTitle>
           </DialogHeader>
           <div className="pt-2">
-            <MapView
-              key={`map-${showMapModal}-${(results as any[]).length}`}
+            <InteractiveMap
               foods={results}
-              onFoodSelect={setSelectedFoodId as any}
-              height={480}
+              onFoodSelect={(id: string) => setSelectedFoodId(id)}
+              height={520}
             />
           </div>
         </DialogContent>
