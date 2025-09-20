@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { MiniMap } from '@/components/MiniMap';
+import { getLocalImageForFood } from '@/lib/imageMap';
 
 interface FoodDetailModalProps {
   foodId: string | null;
@@ -24,11 +27,14 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   const [isSaved, setIsSaved] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 0, text: '' });
+  const [showMap, setShowMap] = useState(false);
+  const [showDirections, setShowDirections] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (foodId && isOpen) {
       fetchFoodDetails();
+      setShowMap(false);
     }
   }, [foodId, isOpen]);
 
@@ -109,12 +115,9 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
     });
   };
 
-  const handleGetDirections = () => {
-    if (food?.restaurants) {
-      const address = `${food.restaurants.address}, ${food.restaurants.city}, ${food.restaurants.state}`;
-      const encodedAddress = encodeURIComponent(address);
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`, '_blank');
-    }
+  const toggleMap = () => {
+    setShowDirections(true);
+    setShowMap((v) => !v);
   };
 
   const renderStars = (rating: number, interactive = false, onRate?: (rating: number) => void) => {
@@ -137,6 +140,9 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
   if (!isOpen) return null;
 
+  // Prefer DB image, fall back to local asset if not provided
+  const resolvedImage = food?.image_url || getLocalImageForFood(food?.name);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" showClose={false}>
@@ -158,9 +164,9 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
           <div className="space-y-6">
             {/* Hero Image */}
             <div className="relative aspect-[16/10] bg-muted rounded-lg overflow-hidden">
-              {food.image_url ? (
+              {resolvedImage ? (
                 <img
-                  src={food.image_url}
+                  src={resolvedImage}
                   alt={food.name}
                   className="w-full h-full object-cover"
                 />
@@ -176,6 +182,13 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                 </Badge>
               )}
             </div>
+
+            {/* Slide-down map under the image */}
+            <Collapsible open={showMap} onOpenChange={setShowMap}>
+              <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown">
+                <MiniMap restaurantName={food.restaurants?.name} height={360} showDirections={showDirections} destinationAddress={[food.restaurants?.address, food.restaurants?.city, food.restaurants?.state].filter(Boolean).join(', ')} />
+              </CollapsibleContent>
+            </Collapsible>
 
             {/* Food Info */}
             <div className="space-y-4">
@@ -240,7 +253,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                 <Button variant="outline" size="icon">
                   <Share2 className="h-4 w-4" />
                 </Button>
-                <Button variant="hero" onClick={handleGetDirections}>
+                <Button variant="hero" onClick={toggleMap}>
                   <Navigation className="h-4 w-4 mr-2" />
                   Directions
                 </Button>

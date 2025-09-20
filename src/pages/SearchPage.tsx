@@ -10,6 +10,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { debounce } from 'lodash';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const filterChips = [
   'All',
@@ -28,7 +29,7 @@ export const SearchPage = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
-  const [showMap, setShowMap] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -113,9 +114,9 @@ export const SearchPage = () => {
             Near Me
           </Button>
           <Button 
-            variant={showMap ? "default" : "outline"} 
+            variant={showMapModal ? "default" : "outline"} 
             size="sm"
-            onClick={() => setShowMap(!showMap)}
+            onClick={() => setShowMapModal(true)}
           >
             <Map className="h-4 w-4 mr-2" />
             Map
@@ -145,14 +146,6 @@ export const SearchPage = () => {
               {loading ? 'Searching...' : `${results.length} results for "${query}"`}
             </p>
           </div>
-        )}
-
-        {/* Map View */}
-        {showMap && query && results.length > 0 && (
-          <MapView 
-            foods={results} 
-            onFoodSelect={handleFoodClick}
-          />
         )}
 
         {/* Results Grid */}
@@ -201,6 +194,23 @@ export const SearchPage = () => {
           </div>
         )}
       </div>
+
+      {/* Map Modal */}
+      <Dialog open={showMapModal} onOpenChange={setShowMapModal}>
+        <DialogContent className="max-w-4xl w-[95vw]">
+          <DialogHeader>
+            <DialogTitle>Results on Map</DialogTitle>
+          </DialogHeader>
+          <div className="pt-2">
+            <MapView
+              key={`map-${showMapModal}-${(results as any[]).length}`}
+              foods={results}
+              onFoodSelect={setSelectedFoodId as any}
+              height={480}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Food Detail Modal */}
       <FoodDetailModal
