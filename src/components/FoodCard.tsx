@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Star, Heart, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { getLocalImageForFood } from '@/lib/imageMap';
 
 interface FoodCardProps {
   id: string;
@@ -36,6 +37,11 @@ export const FoodCard = ({
   onSave,
   className,
 }: FoodCardProps) => {
+  const [imageError, setImageError] = useState(false);
+  const localImage = getLocalImageForFood(name);
+
+  const resolvedImage = !imageError ? (image || localImage) : undefined;
+
   return (
     <Card
       className={cn(
@@ -47,15 +53,20 @@ export const FoodCard = ({
       <CardContent className="p-0">
         {/* Image */}
         <div className="relative aspect-[4/3] bg-muted">
-          {image ? (
+          {resolvedImage ? (
             <img
-              src={image}
+              src={resolvedImage}
               alt={name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              onError={() => setImageError(true)}
             />
           ) : (
+            // Simple dish icon fallback
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-              <div className="text-primary text-4xl">🍽️</div>
+              <div className="text-center">
+                <div className="text-6xl mb-2">🍽️</div>
+                <div className="text-sm font-medium text-primary px-2">{name}</div>
+              </div>
             </div>
           )}
           

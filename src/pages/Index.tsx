@@ -7,8 +7,8 @@ import { Card } from '@/components/ui/card';
 import { FoodCard } from '@/components/FoodCard';
 import { FoodDetailModal } from '@/components/FoodDetailModal';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { fetchTrendingFoods, fetchRecommendedFoods } from '@/services/foodService';
 
 const categoryChips = [
   { name: 'Trending', icon: '🔥' },
@@ -21,41 +21,31 @@ const categoryChips = [
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [hotFoods, setHotFoods] = useState([]);
+  const [hotFoods, setHotFoods] = useState<any[]>([]);
+  const [recommendedFoods, setRecommendedFoods] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchHotFoods();
-  }, []);
-
-  const fetchHotFoods = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('food_items')
-        .select(`
-          *,
-          restaurants (name, city, state)
-        `)
-        .eq('is_trending', true)
-        .order('avg_rating', { ascending: false })
-        .limit(6);
-
-      if (error) throw error;
-      setHotFoods(data || []);
-    } catch (error) {
-      console.error('Error fetching hot foods:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load trending foods",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    const load = async () => {
+      try {
+        const [hot, rec] = await Promise.all([
+          fetchTrendingFoods(8),
+          fetchRecommendedFoods(12),
+        ]);
+        setHotFoods(hot);
+        setRecommendedFoods(rec);
+      } catch (e) {
+        console.error('Error loading homepage data', e);
+        toast({ title: 'Error', description: 'Failed to load foods', variant: 'destructive' });
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [toast]);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -121,7 +111,7 @@ const Index = () => {
 
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(8)].map((_, i) => (
               <Card key={i} className="aspect-[3/4] animate-pulse">
                 <div className="bg-muted h-full rounded-lg"></div>
               </Card>
@@ -155,22 +145,32 @@ const Index = () => {
           <h2 className="text-xl font-semibold">Recommended for You</h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {hotFoods.slice(0, 4).map((food: any) => (
-            <FoodCard
-              key={`rec-${food.id}`}
-              id={food.id}
-              name={food.name}
-              restaurant={food.restaurants?.name}
-              image={food.image_url}
-              rating={food.avg_rating || 0}
-              ratingCount={food.rating_count || 0}
-              tags={food.tags || []}
-              price={food.price}
-              onClick={() => handleFoodClick(food.id)}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[...Array(12)].map((_, i) => (
+              <Card key={i} className="aspect-[3/4] animate-pulse">
+                <div className="bg-muted h-full rounded-lg"></div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {recommendedFoods.map((food: any) => (
+              <FoodCard
+                key={`rec-${food.id}`}
+                id={food.id}
+                name={food.name}
+                restaurant={food.restaurants?.name}
+                image={food.image_url}
+                rating={food.avg_rating || 0}
+                ratingCount={food.rating_count || 0}
+                tags={food.tags || []}
+                price={food.price}
+                onClick={() => handleFoodClick(food.id)}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Food Detail Modal */}
