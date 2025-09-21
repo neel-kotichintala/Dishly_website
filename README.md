@@ -1,73 +1,21 @@
-# Welcome to your Lovable project
+Inspiration
+Food reviews should reflect the dishes we actually eat, not just the restaurants they come from. Dishly was inspired by the idea of making food reviews more accurate and useful, focusing on individual dishes rather than the entire dining experience. Large platforms such as Yelp and Google Maps rate restaurants as a whole, meaning that factors like service, cleanliness, or wait time often overshadow the actual quality of the food. With Dishly, our goal is to eliminate these confounding factors and create a platform that highlights honest evaluations of dishes themselves.
 
-## Project info
+##What it does
+Dishly is a web app where users can discover, review, and share feedback on specific dishes. The home tab allows users to explore new foods through AI-powered personalized recommendations, based on their history with the app and dishes trending nearby. In the search tab, users can look for specific dishes, while the rate tab lets them leave ratings and written reviews for dishes they’ve tried. This tab also suggests nearby restaurants and recently browsed dishes.
+Maps and directions are integrated throughout the app. Users can get quick in-app directions to restaurants, and dish search results can be viewed in map form, with pins showing the restaurant and its average star rating for that dish. The profile tab adds gamification, where users level up their rank as food critics by contributing reviews and menu entries. The save tab allows users to bookmark favorite dishes for easy access. The profile tab also has a place to upload menus which uses an AI web scraper we made to get more food and restaurant data easily.
 
-**URL**: https://lovable.dev/projects/3772ce5e-2a59-47dc-8941-8d3d49c562d2
+## How we built it
+Dishly was developed as a web application using Vite as the build and production tool, with React and TypeScript for the front end to create a smooth, responsive user interface. Supabase provided the backend infrastructure, handling data storage, search functions, and authentication seamlessly. Google Maps APIs powered the location-based features, including map views, pins for dishes, and directions to restaurants. Finally, we used Open AI’s API to create an AI menu scraper for quick additions to our food database.
 
-## How can I edit this code?
+## Challenges we ran into
+One of the main challenges was working with a finite set of menus limited to West Lafayette restaurants. Creating a scalable structure for menu data while ensuring reviews stayed tied to specific dishes was technically complex. The best way to resolve this was to integrate an AI web scraper using Open AI API, to let users and restaurants input menus rather than us developing web scraping tools that can gather incorrect information. Integrating maps and location features in multiple tabs also required significant effort, as we had to balance user experience with technical constraints. Neither of us knew how to integrate maps into this website as well, so it was worth it once we finally got it working.
 
-There are several ways of editing your application.
+## Accomplishments that we’re proud of
+We are proud of building a unique platform that shifts food reviews away from restaurants and onto dishes, offering a perspective that no major platform currently provides. We also successfully integrated AI personalization, location services, and gamification into one cohesive app experience. Dishly represents our ability to bring together design, functionality, and creativity into a working product in a short timeframe.
+What we learned
 
-**Use Lovable**
+## Working on Dishly taught us the importance of designing for scalability and user engagement. We learned how to effectively use Supabase with React and TypeScript for rapid development, and how to incorporate APIs like Google Maps and Open AI to enhance usability. Beyond the technical lessons, we discovered that gamification can be a powerful tool for encouraging user participation in a crowdsourced platform.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3772ce5e-2a59-47dc-8941-8d3d49c562d2) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/3772ce5e-2a59-47dc-8941-8d3d49c562d2) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## What’s next for Dishly
+Future plans for Dishly include expanding beyond West Lafayette by allowing users themselves to input menus, making the platform scalable to a global audience. We also plan to implement promotional content, where restaurants can upload videos of their dishes with direct links to them in the app, as well as sponsored listings to support monetization. By refining our recommendation engine and growing the user base, Dishly can evolve into the go-to platform for honest, dish-focused reviews worldwide.
