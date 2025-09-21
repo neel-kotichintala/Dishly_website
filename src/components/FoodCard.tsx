@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { getLocalImageForFood } from '@/lib/imageMap';
 import { getApproximateCoordinates, haversineMiles } from '@/lib/geo';
+import { isSaved as isSavedFn, toggleSaved } from '@/services/savedService';
 
 interface FoodCardProps {
   id: string;
@@ -40,7 +41,12 @@ export const FoodCard = ({
 }: FoodCardProps) => {
   const [imageError, setImageError] = useState(false);
   const [miles, setMiles] = useState<number | null>(null);
+  const [saved, setSaved] = useState<boolean>(isSavedFn(id));
   const localImage = getLocalImageForFood(name);
+
+  useEffect(() => {
+    setSaved(isSavedFn(id));
+  }, [id]);
 
   useEffect(() => {
     const dest = getApproximateCoordinates(restaurant);
@@ -106,10 +112,12 @@ export const FoodCard = ({
             className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm hover:bg-background"
             onClick={(e) => {
               e.stopPropagation();
+              const val = toggleSaved(id);
+              setSaved(val);
               onSave?.();
             }}
           >
-            <Heart className={cn("h-4 w-4", isSaved && "fill-primary text-primary")} />
+            <Heart className={cn("h-4 w-4", (saved || isSaved) && "fill-primary text-primary")} />
           </Button>
         </div>
 

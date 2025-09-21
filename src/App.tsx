@@ -11,6 +11,7 @@ import { RatePage } from "./pages/RatePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { FoodDetailPage } from "./pages/FoodDetailPage";
 import { AuthPage } from "./pages/AuthPage";
+import { SavedPage } from "./pages/SavedPage";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route index element={<Index />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/rate" element={<RatePage />} />
+            <Route path="/saved" element={<SavedPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/food/:id" element={<FoodDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

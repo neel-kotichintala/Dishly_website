@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { MiniMap } from '@/components/MiniMap';
 import { getLocalImageForFood } from '@/lib/imageMap';
+import { isSaved as isSavedFn, toggleSaved, setSaved as setSavedFlag } from '@/services/savedService';
 
 interface FoodDetailModalProps {
   foodId: string | null;
@@ -35,6 +36,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
     if (foodId && isOpen) {
       fetchFoodDetails();
       setShowMap(false);
+      setIsSaved(isSavedFn(foodId));
     }
   }, [foodId, isOpen]);
 
@@ -87,10 +89,11 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   };
 
   const handleSave = async () => {
-    setIsSaved(!isSaved);
+    const newVal = toggleSaved(foodId);
+    setIsSaved(newVal);
     toast({
-      title: isSaved ? "Removed from saved" : "Saved!",
-      description: isSaved ? "Item removed from your saved list" : "Item added to your saved list",
+      title: newVal ? "Saved!" : "Removed from saved",
+      description: newVal ? "Item added to your saved list" : "Item removed from your saved list",
     });
   };
 

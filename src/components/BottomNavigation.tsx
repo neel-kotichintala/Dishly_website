@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Search, Star, User } from 'lucide-react';
+import { Home, Search, Star, User, Heart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -7,6 +7,7 @@ const navItems = [
   { path: '/', icon: Home, label: 'Home' },
   { path: '/search', icon: Search, label: 'Search' },
   { path: '/rate', icon: Star, label: 'Rate' },
+  { path: '/saved', icon: Heart, label: 'Saved' },
   { path: '/profile', icon: User, label: 'Profile' },
 ];
 
