@@ -1,7 +1,7 @@
-Inspiration
+## Inspiration
 Food reviews should reflect the dishes we actually eat, not just the restaurants they come from. Dishly was inspired by the idea of making food reviews more accurate and useful, focusing on individual dishes rather than the entire dining experience. Large platforms such as Yelp and Google Maps rate restaurants as a whole, meaning that factors like service, cleanliness, or wait time often overshadow the actual quality of the food. With Dishly, our goal is to eliminate these confounding factors and create a platform that highlights honest evaluations of dishes themselves.
 
-##What it does
+## What it does
 Dishly is a web app where users can discover, review, and share feedback on specific dishes. The home tab allows users to explore new foods through AI-powered personalized recommendations, based on their history with the app and dishes trending nearby. In the search tab, users can look for specific dishes, while the rate tab lets them leave ratings and written reviews for dishes they’ve tried. This tab also suggests nearby restaurants and recently browsed dishes.
 Maps and directions are integrated throughout the app. Users can get quick in-app directions to restaurants, and dish search results can be viewed in map form, with pins showing the restaurant and its average star rating for that dish. The profile tab adds gamification, where users level up their rank as food critics by contributing reviews and menu entries. The save tab allows users to bookmark favorite dishes for easy access. The profile tab also has a place to upload menus which uses an AI web scraper we made to get more food and restaurant data easily.
 
