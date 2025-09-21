@@ -6,9 +6,13 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { FoodCard } from '@/components/FoodCard';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { FoodDetailModal } from '@/components/FoodDetailModal';
+import { getDeviceId } from '@/services/device';
+import { getLocalReviewsByUser } from '@/services/reviewsLocal';
+import { UploadMenuModal } from '@/components/UploadMenuModal';
 
 const achievementLevels = [
   { name: 'Newcomer', min: 0, color: 'bg-gray-500' },
@@ -18,15 +22,14 @@ const achievementLevels = [
 ];
 
 export const ProfilePage = () => {
-  const [profile, setProfile] = useState(null);
-  const [savedFoods, setSavedFoods] = useState([]);
-  const [userReviews, setUserReviews] = useState([]);
+  const [profile, setProfile] = useState<any>(null);
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
-    // For demo purposes, we'll show a sample profile
     const mockProfile = {
       display_name: 'Food Explorer',
       points: 750,
@@ -35,26 +38,59 @@ export const ProfilePage = () => {
       achievement_level: 'Silver Critic',
       avatar_url: null,
     };
-    
     setProfile(mockProfile);
-    setLoading(false);
+    loadMyReviews();
   }, []);
 
-  const getCurrentLevel = () => {
-    if (!profile) return achievementLevels[0];
-    return achievementLevels.find(level => 
-      profile.points >= level.min && 
-      (achievementLevels[achievementLevels.indexOf(level) + 1]?.min > profile.points || !achievementLevels[achievementLevels.indexOf(level) + 1])
-    ) || achievementLevels[0];
+  const loadMyReviews = async () => {
+    const deviceId = getDeviceId();
+    // Primary: local reviews for immediate demo reliability
+    const local = getLocalReviewsByUser(deviceId);
+    if (local.length > 0) {
+      // Fetch food info for these reviews
+      const ids = Array.from(new Set(local.map((r) => r.food_item_id)));
+      const { data } = await supabase
+        .from('food_items')
+        .select('id, name, image_url, avg_rating, rating_count, price, restaurants (name)')
+        .in('id', ids);
+      const map = new Map((data || []).map((f: any) => [f.id, f]));
+      const items = local
+        .map((r) => ({ food_items: map.get(r.food_item_id), created_at: r.created_at }))
+        .filter((x) => x.food_items);
+      setUserReviews(items as any[]);
+      return;
+    }
+
+    // Fallback: Supabase reviews if no local ones
+    try {
+      const { data } = await supabase
+        .from('reviews')
+        .select('*, food_items (id, name, image_url, avg_rating, rating_count, price, restaurants (name))')
+        .eq('user_id', deviceId)
+        .order('created_at', { ascending: false });
+      setUserReviews(data || []);
+    } catch {
+      setUserReviews([]);
+    }
   };
 
-  const getNextLevel = () => {
-    const currentLevel = getCurrentLevel();
+  const currentLevel = (() => {
+    if (!profile) return achievementLevels[0];
+    return (
+      achievementLevels.find((level) =>
+        profile.points >= level.min &&
+        (achievementLevels[achievementLevels.indexOf(level) + 1]?.min > profile.points ||
+          !achievementLevels[achievementLevels.indexOf(level) + 1])
+      ) || achievementLevels[0]
+    );
+  })();
+
+  const nextLevel = (() => {
     const currentIndex = achievementLevels.indexOf(currentLevel);
     return achievementLevels[currentIndex + 1];
-  };
+  })();
 
-  if (loading) {
+  if (loading && !profile) {
     return (
       <div className="container mx-auto px-4 py-6">
         <div className="animate-pulse space-y-4">
@@ -78,10 +114,9 @@ export const ProfilePage = () => {
     );
   }
 
-  const currentLevel = getCurrentLevel();
-  const nextLevel = getNextLevel();
-  const progressToNext = nextLevel ? 
-    ((profile.points - currentLevel.min) / (nextLevel.min - currentLevel.min)) * 100 : 100;
+  const progressToNext = nextLevel
+    ? ((profile.points - currentLevel.min) / (nextLevel.min - currentLevel.min)) * 100
+    : 100;
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
@@ -165,12 +200,20 @@ export const ProfilePage = () => {
             Help grow our food database by uploading restaurant menus. 
             Our AI will process them and award you points for each new dish added!
           </p>
-          <Button variant="hero" className="w-full sm:w-auto">
+          <Button variant="hero" className="w-full sm:w-auto" onClick={() => setShowUpload(true)}>
             <Upload className="h-4 w-4 mr-2" />
             Upload Menu
           </Button>
         </CardContent>
       </Card>
+
+      <UploadMenuModal
+        open={showUpload}
+        onOpenChange={setShowUpload}
+        onSubmit={({ restaurant, file }) => {
+          console.log('Upload submitted:', restaurant, file?.name);
+        }}
+      />
 
       {/* Achievement Showcase */}
       <Card>
@@ -207,26 +250,45 @@ export const ProfilePage = () => {
         </CardContent>
       </Card>
 
-      {/* Recent Activity Placeholder */}
+      {/* My Reviews */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Reviews</CardTitle>
+          <CardTitle>My Reviews</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 space-y-4">
-            <div className="text-4xl">📝</div>
-            <div>
-              <h3 className="font-semibold">No reviews yet</h3>
-              <p className="text-sm text-muted-foreground">
-                Start reviewing foods to see them here
-              </p>
+          {userReviews.length === 0 ? (
+            <div className="text-center py-8 space-y-4">
+              <div className="text-4xl">📝</div>
+              <div>
+                <h3 className="font-semibold">No reviews yet</h3>
+                <p className="text-sm text-muted-foreground">Review a dish to see it here</p>
+              </div>
             </div>
-            <Link to="/rate">
-              <Button variant="outline">Write Your First Review</Button>
-            </Link>
-          </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {userReviews.map((r: any) => (
+                <FoodCard
+                  key={`myreview-${r.food_items?.id}`}
+                  id={r.food_items?.id}
+                  name={r.food_items?.name}
+                  restaurant={r.food_items?.restaurants?.name}
+                  image={r.food_items?.image_url}
+                  rating={r.food_items?.avg_rating || 0}
+                  ratingCount={r.food_items?.rating_count || 0}
+                  price={r.food_items?.price}
+                  onClick={() => setSelectedFoodId(r.food_items?.id)}
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      <FoodDetailModal
+        foodId={selectedFoodId}
+        isOpen={!!selectedFoodId}
+        onClose={() => setSelectedFoodId(null)}
+      />
     </div>
   );
 };

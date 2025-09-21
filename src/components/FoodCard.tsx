@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Heart, MapPin } from 'lucide-react';
+import { Star, Heart, MapPin, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -100,8 +100,9 @@ export const FoodCard = ({
           
           {/* Hot Badge */}
           {isHot && (
-            <Badge className="absolute top-2 left-2 bg-warning text-warning-foreground">
-              🔥 Hot
+            <Badge className="absolute top-2 left-2 bg-warning text-warning-foreground flex items-center gap-1">
+              <Flame className="h-3 w-3" />
+              Hot
             </Badge>
           )}
           

@@ -10,6 +10,8 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { MiniMap } from '@/components/MiniMap';
 import { getLocalImageForFood } from '@/lib/imageMap';
 import { isSaved as isSavedFn, toggleSaved, setSaved as setSavedFlag } from '@/services/savedService';
+import { getDeviceId } from '@/services/device';
+import { addLocalReview, getLocalReviewsByFood } from '@/services/reviewsLocal';
 
 // Simple seeded random for deterministic mock reviews per food
 function seededRandom(seed: number) {
@@ -47,6 +49,7 @@ function generateMockReviews(foodKey: string, countMin = 2, countMax = 5) {
     'Great for sharing. Came out fast and hot.',
     'My new go-to here. Highly recommend.'
   ];
+  const tiers = ['Newcomer', 'Bronze Critic', 'Silver Critic', 'Platinum Critic'];
 
   const seed = hashString(foodKey);
   const rnd = seededRandom(seed);
@@ -64,12 +67,17 @@ function generateMockReviews(foodKey: string, countMin = 2, countMax = 5) {
     const comment = comments[Math.floor(rnd() * comments.length)];
     const daysAgo = Math.floor(rnd() * 120) + 1; // within ~4 months
 
+    // Weighted tier selection (more likely Bronze/Silver)
+    const tierPick = rnd();
+    const tier = tierPick < 0.15 ? tiers[0] : tierPick < 0.6 ? tiers[1] : tierPick < 0.9 ? tiers[2] : tiers[3];
+
     picks.push({
       id: `${foodKey}-${i}`,
       rating,
       text: comment,
       created_at: new Date(now - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
-      profiles: { display_name: names[nameIdx], avatar_url: null }
+      profiles: { display_name: names[nameIdx], avatar_url: null },
+      tier,
     });
   }
   return picks;
@@ -121,9 +129,17 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
       if (foodError) throw foodError;
 
       setFood(foodData);
-      // Create deterministic mock reviews per food id or name
       const key = foodData?.id || foodData?.name || 'food';
-      setReviews(generateMockReviews(String(key)));
+      const mock = generateMockReviews(String(key));
+      const local = getLocalReviewsByFood(String(foodData.id)).map((r) => ({
+        id: r.id,
+        rating: r.rating,
+        text: r.text,
+        created_at: r.created_at,
+        profiles: { display_name: 'You', avatar_url: null },
+        tier: 'Silver Critic',
+      }));
+      setReviews([...local, ...mock]);
     } catch (error) {
       console.error('Error fetching food details:', error);
       toast({
@@ -146,24 +162,53 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   };
 
   const handleSubmitReview = async () => {
-    if (!newReview.rating) return;
+    if (!newReview.rating || !foodId) return;
 
     const reviewData = {
-      id: Date.now().toString(),
+      food_item_id: foodId,
       rating: newReview.rating,
-      text: newReview.text,
+      text: newReview.text || null,
+      user_id: getDeviceId(),
+      verified: false,
+      photos: null,
       created_at: new Date().toISOString(),
-      profiles: { display_name: 'You', avatar_url: null }
-    };
+      updated_at: new Date().toISOString(),
+    } as any;
 
-    setReviews([reviewData, ...reviews]);
+    // Optimistic update (Silver Critic for you)
+    setReviews([
+      {
+        id: Date.now().toString(),
+        rating: reviewData.rating,
+        text: reviewData.text,
+        created_at: reviewData.created_at,
+        profiles: { display_name: 'You', avatar_url: null },
+        tier: 'Silver Critic',
+      },
+      ...reviews,
+    ]);
+
     setNewReview({ rating: 0, text: '' });
     setShowReviewForm(false);
     
-    toast({
-      title: "Review submitted!",
-      description: "Thank you for your feedback",
-    });
+    try {
+      // Save to Supabase (best effort)
+      await supabase.from('reviews').insert({
+        food_item_id: reviewData.food_item_id,
+        rating: reviewData.rating,
+        text: reviewData.text,
+        user_id: reviewData.user_id,
+        verified: reviewData.verified,
+        photos: reviewData.photos,
+        created_at: reviewData.created_at,
+        updated_at: reviewData.updated_at,
+      });
+    } catch {}
+
+    // Always save locally for demo reliability
+    addLocalReview(foodId, reviewData.rating, reviewData.text);
+
+    toast({ title: 'Review submitted!', description: 'Thank you for your feedback' });
   };
 
   const toggleMap = () => {
@@ -375,6 +420,9 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                               <span className="font-medium">
                                 {review.profiles?.display_name || 'Anonymous'}
                               </span>
+                              <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
+                                {review.tier || 'Newcomer'}
+                              </Badge>
                               {renderStars(review.rating)}
                             </div>
                             <span className="text-sm text-muted-foreground">
