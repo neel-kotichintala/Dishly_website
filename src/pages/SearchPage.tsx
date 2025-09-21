@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Filter, MapPin, Map } from 'lucide-react';
+import { Search, Filter, MapPin, Map, UtensilsCrossed } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FoodCard } from '@/components/FoodCard';
 import { FoodDetailModal } from '@/components/FoodDetailModal';
-import { MapView } from '@/components/MapView';
 import { InteractiveMap } from '@/components/InteractiveMap';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { debounce } from 'lodash';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
-const filterChips = [
+const availableFilters = [
   'All',
   'Vegetarian',
   'Vegan', 
@@ -24,20 +26,26 @@ const filterChips = [
   'Fast Food',
 ];
 
+type SortOrder = 'rating_desc' | 'rating_asc' | 'default';
+
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [pendingFilter, setPendingFilter] = useState('All');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('default');
+  const [pendingSortOrder, setPendingSortOrder] = useState<SortOrder>('default');
   const [showMapModal, setShowMapModal] = useState(false);
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    debounce(async (searchQuery: string) => {
+    debounce(async (searchQuery: string, filter: string, sort: SortOrder) => {
       if (!searchQuery.trim()) {
         setResults([]);
         return;
@@ -58,33 +66,46 @@ export const SearchPage = () => {
         );
 
         // Apply filters
-        if (activeFilter !== 'All') {
-          queryBuilder = queryBuilder.contains('tags', [activeFilter.toLowerCase()]);
+        if (filter !== 'All') {
+          queryBuilder = queryBuilder.contains('tags', [filter.toLowerCase()]);
         }
 
-        const { data, error } = await queryBuilder
-          .order('avg_rating', { ascending: false })
-          .limit(20);
+        // Sorting
+        if (sort === 'rating_desc') {
+          queryBuilder = queryBuilder.order('avg_rating', { ascending: false });
+        } else if (sort === 'rating_asc') {
+          queryBuilder = queryBuilder.order('avg_rating', { ascending: true });
+        } else {
+          queryBuilder = queryBuilder.order('avg_rating', { ascending: false });
+        }
+
+        const { data, error } = await queryBuilder.limit(20);
 
         if (error) throw error;
         setResults(data || []);
       } catch (error) {
         console.error('Search error:', error);
         toast({
-          title: "Search Error",
-          description: "Failed to search for foods",
-          variant: "destructive",
+          title: 'Search Error',
+          description: 'Failed to search for foods',
+          variant: 'destructive',
         });
       } finally {
         setLoading(false);
       }
     }, 300),
-    [activeFilter, toast]
+    [toast]
   );
 
   useEffect(() => {
-    debouncedSearch(query);
-  }, [query, debouncedSearch]);
+    debouncedSearch(query, activeFilter, sortOrder);
+  }, [query, activeFilter, sortOrder, debouncedSearch]);
+
+  const applyFilters = () => {
+    setActiveFilter(pendingFilter);
+    setSortOrder(pendingSortOrder);
+    setFiltersOpen(false);
+  };
 
   const handleFoodClick = (foodId: string) => {
     setSelectedFoodId(foodId);
@@ -106,16 +127,55 @@ export const SearchPage = () => {
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filters
-          </Button>
+          <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80" align="start">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Filter by tag</h4>
+                  <RadioGroup value={pendingFilter} onValueChange={setPendingFilter}>
+                    {availableFilters.map((f) => (
+                      <div key={f} className="flex items-center space-x-2">
+                        <RadioGroupItem value={f} id={`f-${f}`} />
+                        <Label htmlFor={`f-${f}`} className="text-sm">{f}</Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Sort</h4>
+                  <RadioGroup value={pendingSortOrder} onValueChange={(v) => setPendingSortOrder(v as SortOrder)}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="rating_desc" id="s-desc" />
+                      <Label htmlFor="s-desc" className="text-sm">Highest rating → Lowest</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="rating_asc" id="s-asc" />
+                      <Label htmlFor="s-asc" className="text-sm">Lowest rating → Highest</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setFiltersOpen(false)}>Cancel</Button>
+                  <Button variant="hero" size="sm" onClick={applyFilters}>Apply</Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
           <Button variant="outline" size="sm">
             <MapPin className="h-4 w-4 mr-2" />
             Near Me
           </Button>
           <Button 
-            variant={showMapModal ? "default" : "outline"} 
+            variant={showMapModal ? 'default' : 'outline'} 
             size="sm"
             onClick={() => setShowMapModal(true)}
           >
@@ -123,20 +183,6 @@ export const SearchPage = () => {
             Map
           </Button>
         </div>
-      </div>
-
-      {/* Filter Chips */}
-      <div className="flex flex-wrap gap-2">
-        {filterChips.map((filter) => (
-          <Badge
-            key={filter}
-            variant={activeFilter === filter ? "default" : "secondary"}
-            className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-3 py-1"
-            onClick={() => setActiveFilter(filter)}
-          >
-            {filter}
-          </Badge>
-        ))}
       </div>
 
       {/* Results Section */}
@@ -169,13 +215,13 @@ export const SearchPage = () => {
                 ratingCount={food.rating_count || 0}
                 tags={food.tags || []}
                 price={food.price}
-                onClick={() => handleFoodClick(food.id)}
+                onClick={() => setSelectedFoodId(food.id)}
               />
             ))}
           </div>
         ) : query ? (
           <div className="text-center py-12 space-y-4">
-            <div className="text-6xl">🔍</div>
+            <Search className="h-12 w-12 mx-auto text-muted-foreground" />
             <div>
               <h3 className="font-semibold">No results found</h3>
               <p className="text-sm text-muted-foreground">
@@ -185,7 +231,7 @@ export const SearchPage = () => {
           </div>
         ) : (
           <div className="text-center py-12 space-y-4">
-            <div className="text-6xl">🍽️</div>
+            <UtensilsCrossed className="h-12 w-12 mx-auto text-muted-foreground" />
             <div>
               <h3 className="font-semibold">Start searching</h3>
               <p className="text-sm text-muted-foreground">
@@ -203,11 +249,7 @@ export const SearchPage = () => {
             <DialogTitle>Results on Map</DialogTitle>
           </DialogHeader>
           <div className="pt-2">
-            <InteractiveMap
-              foods={results}
-              onFoodSelect={(id: string) => setSelectedFoodId(id)}
-              height={520}
-            />
+            <InteractiveMap foods={results} onFoodSelect={setSelectedFoodId as any} height={520} />
           </div>
         </DialogContent>
       </Dialog>

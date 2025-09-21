@@ -71,7 +71,7 @@ const Index = () => {
 
         {/* Search Bar */}
         <div className="relative max-w-md mx-auto">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search for dishes..."
             value={searchQuery}
@@ -82,7 +82,7 @@ const Index = () => {
           {searchQuery && (
             <Button
               onClick={handleSearch}
-              className="absolute right-2 top-2 rounded-full"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full"
               size="sm"
             >
               Search

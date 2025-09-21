@@ -13,6 +13,7 @@ import { FoodDetailModal } from '@/components/FoodDetailModal';
 import { getDeviceId } from '@/services/device';
 import { getLocalReviewsByUser } from '@/services/reviewsLocal';
 import { UploadMenuModal } from '@/components/UploadMenuModal';
+import { uploadMenuFile } from '@/services/menuUpload';
 
 const achievementLevels = [
   { name: 'Newcomer', min: 0, color: 'bg-gray-500' },
@@ -115,7 +116,7 @@ export const ProfilePage = () => {
   }
 
   const progressToNext = nextLevel
-    ? ((profile.points - currentLevel.min) / (nextLevel.min - currentLevel.min)) * 100
+    ? Math.min(100, (profile.points / nextLevel.min) * 100)
     : 100;
 
   return (
@@ -210,8 +211,13 @@ export const ProfilePage = () => {
       <UploadMenuModal
         open={showUpload}
         onOpenChange={setShowUpload}
-        onSubmit={({ restaurant, file }) => {
-          console.log('Upload submitted:', restaurant, file?.name);
+        onSubmit={async ({ restaurant, file }) => {
+          try {
+            const res = await uploadMenuFile(restaurant, file);
+            toast({ title: 'Upload received', description: `Processing ${restaurant}…` });
+          } catch (e: any) {
+            toast({ title: 'Upload failed', description: e?.message || 'Please try again', variant: 'destructive' });
+          }
         }}
       />
 
