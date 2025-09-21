@@ -85,6 +85,23 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ foods, onFoodSel
 
         return marker;
       });
+
+      // Fit bounds to show all markers
+      if (markers.length > 0) {
+        const bounds = new (window as any).google.maps.LatLngBounds();
+        markers.forEach((m) => {
+          const pos = m.getPosition && m.getPosition();
+          if (pos) bounds.extend(pos);
+        });
+        if (!bounds.isEmpty()) {
+          map.fitBounds(bounds, 40); // padding
+          // If only one marker, apply a friendly zoom level
+          if (markers.length === 1) {
+            map.setCenter(bounds.getCenter());
+            map.setZoom(15);
+          }
+        }
+      }
     };
 
     init();

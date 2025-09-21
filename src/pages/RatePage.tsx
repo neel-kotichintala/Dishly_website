@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Clock, MapPin, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FoodCard } from '@/components/FoodCard';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getRecentIds } from '@/services/recentService';
+import { FoodDetailModal } from '@/components/FoodDetailModal';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export const RatePage = () => {
-  const [recentlyViewed, setRecentlyViewed] = useState([]);
-  const [nearbyRestaurants, setNearbyRestaurants] = useState([]);
+  const [recentFoods, setRecentFoods] = useState<any[]>([]);
+  const [showAllRecent, setShowAllRecent] = useState(false);
+  const [nearbyRestaurants, setNearbyRestaurants] = useState<any[]>([]);
+  const [restaurantFoods, setRestaurantFoods] = useState<any[]>([]);
+  const [selectedRestaurantName, setSelectedRestaurantName] = useState<string | null>(null);
+  const [showMenuModal, setShowMenuModal] = useState(false);
+  const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -21,42 +27,68 @@ export const RatePage = () => {
 
   const fetchData = async () => {
     try {
-      // Fetch some trending foods as "recently viewed" placeholder
-      const { data: foods, error: foodsError } = await supabase
-        .from('food_items')
-        .select(`
-          *,
-          restaurants (name, city, state)
-        `)
-        .limit(6);
-
-      if (foodsError) throw foodsError;
-
-      // Fetch restaurants
-      const { data: restaurants, error: restaurantsError } = await supabase
-        .from('restaurants')
-        .select('*')
-        .limit(8);
-
-      if (restaurantsError) throw restaurantsError;
-
-      setRecentlyViewed(foods || []);
-      setNearbyRestaurants(restaurants || []);
+      await Promise.all([loadRecentFoods(), loadRestaurants()]);
     } catch (error) {
       console.error('Error fetching data:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load data",
-        variant: "destructive",
-      });
+      toast({ title: 'Error', description: 'Failed to load data', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFoodClick = (foodId: string) => {
-    navigate(`/food/${foodId}`);
+  const loadRecentFoods = async () => {
+    const ids = getRecentIds();
+    if (ids.length === 0) {
+      setRecentFoods([]);
+      return;
+    }
+    const { data } = await supabase
+      .from('food_items')
+      .select(`*, restaurants (name, city, state)`) 
+      .in('id', ids);
+    const map = new Map((data || []).map((f: any) => [f.id, f]));
+    const ordered = ids.map((id) => map.get(id)).filter(Boolean);
+    setRecentFoods(ordered as any[]);
   };
+
+  const loadRestaurants = async () => {
+    const { data } = await supabase
+      .from('restaurants')
+      .select('*')
+      .limit(8);
+    setNearbyRestaurants(data || []);
+  };
+
+  const handleViewMenu = async (restaurantName: string) => {
+    try {
+      setSelectedRestaurantName(restaurantName);
+      setShowMenuModal(true);
+
+      // Find restaurant id by name, then fetch its food items
+      const { data: rest } = await supabase
+        .from('restaurants')
+        .select('id, name, city, state')
+        .eq('name', restaurantName)
+        .single();
+
+      if (!rest) {
+        setRestaurantFoods([]);
+        return;
+      }
+
+      const { data: foods } = await supabase
+        .from('food_items')
+        .select('*, restaurants (name, city, state)')
+        .eq('restaurant_id', (rest as any).id)
+        .order('avg_rating', { ascending: false });
+
+      setRestaurantFoods(foods || []);
+    } catch (e) {
+      setRestaurantFoods([]);
+    }
+  };
+
+  const visibleRecent = showAllRecent ? recentFoods : recentFoods.slice(0, 4);
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-8">
@@ -73,9 +105,11 @@ export const RatePage = () => {
             <Clock className="h-5 w-5 text-primary" />
             <h2 className="text-xl font-semibold">Recently Viewed</h2>
           </div>
-          <Button variant="link" className="text-primary">
-            View All
-          </Button>
+          {recentFoods.length > 4 && (
+            <Button variant="ghost" size="sm" onClick={() => setShowAllRecent(!showAllRecent)}>
+              {showAllRecent ? 'Show less' : 'View all'}
+            </Button>
+          )}
         </div>
 
         {loading ? (
@@ -84,11 +118,13 @@ export const RatePage = () => {
               <div key={i} className="aspect-[3/4] bg-muted animate-pulse rounded-lg"></div>
             ))}
           </div>
+        ) : recentFoods.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No items yet — start exploring!</p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {recentlyViewed.slice(0, 4).map((food: any) => (
+            {visibleRecent.map((food: any) => (
               <FoodCard
-                key={food.id}
+                key={`recent-${food.id}`}
                 id={food.id}
                 name={food.name}
                 restaurant={food.restaurants?.name}
@@ -97,7 +133,7 @@ export const RatePage = () => {
                 ratingCount={food.rating_count || 0}
                 tags={food.tags || []}
                 price={food.price}
-                onClick={() => handleFoodClick(food.id)}
+                onClick={() => setSelectedFoodId(food.id)}
               />
             ))}
           </div>
@@ -137,7 +173,7 @@ export const RatePage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {nearbyRestaurants.map((restaurant: any) => (
-              <Card key={restaurant.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+              <Card key={restaurant.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
@@ -153,7 +189,7 @@ export const RatePage = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <Button variant="outline" size="sm" className="w-full">
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => handleViewMenu(restaurant.name)}>
                     View Menu Items
                   </Button>
                 </CardContent>
@@ -162,6 +198,42 @@ export const RatePage = () => {
           </div>
         )}
       </section>
+
+      {/* Restaurant Menu Items Modal */}
+      <Dialog open={showMenuModal} onOpenChange={setShowMenuModal}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedRestaurantName || 'Menu Items'}</DialogTitle>
+          </DialogHeader>
+          {restaurantFoods.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No items found.</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {restaurantFoods.map((food: any) => (
+                <FoodCard
+                  key={`menu-${food.id}`}
+                  id={food.id}
+                  name={food.name}
+                  restaurant={food.restaurants?.name}
+                  image={food.image_url}
+                  rating={food.avg_rating || 0}
+                  ratingCount={food.rating_count || 0}
+                  tags={food.tags || []}
+                  price={food.price}
+                  onClick={() => setSelectedFoodId(food.id)}
+                />
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Food Detail Modal */}
+      <FoodDetailModal
+        foodId={selectedFoodId}
+        isOpen={!!selectedFoodId}
+        onClose={() => setSelectedFoodId(null)}
+      />
     </div>
   );
 };

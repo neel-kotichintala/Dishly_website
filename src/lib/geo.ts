@@ -1,12 +1,12 @@
 export type LatLng = { lat: number; lng: number };
 
 const RESTAURANT_COORDS: { [key: string]: LatLng } = {
-  'Triple XXX Family Restaurant': { lat: 40.4242, lng: -86.9081 },
-  'Nine Irish Brothers': { lat: 40.4236, lng: -86.9067 },
-  'Mad Mushroom': { lat: 40.4239, lng: -86.9075 },
-  'Greyhouse Coffee': { lat: 40.4251, lng: -86.9086 },
+  'Triple XXX Family Restaurant': { lat: 40.42297350068717, lng: -86.90548536943183 },
+  'Nine Irish Brothers': { lat: 40.42468122524351, lng: -86.9038768333952 },
+  'Mad Mushroom': { lat: 40.451877159902715, lng: -86.91113439325389 },
+  'Greyhouse Coffee': { lat: 40.42478855048751, lng: -86.90776943419942 },
   "Bruno's Swiss Inn": { lat: 40.4189, lng: -86.8842 },
-  "Harry's Chocolate Shop": { lat: 40.4238, lng: -86.9073 },
+  "Harry's Chocolate Shop": { lat: 40.423955956810666, lng: -86.90904611850605 },
   "Puccini's Smiling Teeth": { lat: 40.4156, lng: -86.8683 },
   'Korea Garden': { lat: 40.4235, lng: -86.9065 },
 };

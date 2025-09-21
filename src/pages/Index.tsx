@@ -9,6 +9,8 @@ import { FoodDetailModal } from '@/components/FoodDetailModal';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { fetchTrendingFoods, fetchRecommendedFoods } from '@/services/foodService';
+import { getRecentIds, pushRecent } from '@/services/recentService';
+import { supabase } from '@/integrations/supabase/client';
 
 const categoryChips = [
   { name: 'Trending', icon: '🔥' },
@@ -23,6 +25,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [hotFoods, setHotFoods] = useState<any[]>([]);
   const [recommendedFoods, setRecommendedFoods] = useState<any[]>([]);
+  const [recentFoods, setRecentFoods] = useState<any[]>([]);
+  const [showAllRecent, setShowAllRecent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -37,6 +41,7 @@ const Index = () => {
         ]);
         setHotFoods(hot);
         setRecommendedFoods(rec);
+        await loadRecentFoods();
       } catch (e) {
         console.error('Error loading homepage data', e);
         toast({ title: 'Error', description: 'Failed to load foods', variant: 'destructive' });
@@ -47,6 +52,22 @@ const Index = () => {
     load();
   }, [toast]);
 
+  const loadRecentFoods = async () => {
+    const ids = getRecentIds();
+    if (ids.length === 0) {
+      setRecentFoods([]);
+      return;
+    }
+    const { data } = await supabase
+      .from('food_items')
+      .select(`*, restaurants (name, city, state)`) 
+      .in('id', ids);
+    // Maintain the order per ids
+    const map = new Map((data || []).map((f: any) => [f.id, f]));
+    const ordered = ids.map((id) => map.get(id)).filter(Boolean);
+    setRecentFoods(ordered as any[]);
+  };
+
   const handleSearch = () => {
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
@@ -54,8 +75,13 @@ const Index = () => {
   };
 
   const handleFoodClick = (foodId: string) => {
+    pushRecent(foodId);
     setSelectedFoodId(foodId);
+    // Reload recents for the section (only four visible unless View All)
+    loadRecentFoods();
   };
+
+  const visibleRecent = showAllRecent ? recentFoods : recentFoods.slice(0, 4);
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-8">
@@ -88,19 +114,8 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Category Chips */}
-      <div className="flex flex-wrap gap-2 justify-center">
-        {categoryChips.map((category) => (
-          <Badge
-            key={category.name}
-            variant="secondary"
-            className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-4 py-2"
-          >
-            <span className="mr-1">{category.icon}</span>
-            {category.name}
-          </Badge>
-        ))}
-      </div>
+      {/* Recently Viewed */}
+      {/* Removed per request. Recently viewed will be shown on the Rate page only. */}
 
       {/* Hot Foods Section */}
       <section className="space-y-4">

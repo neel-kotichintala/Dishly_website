@@ -11,6 +11,70 @@ import { MiniMap } from '@/components/MiniMap';
 import { getLocalImageForFood } from '@/lib/imageMap';
 import { isSaved as isSavedFn, toggleSaved, setSaved as setSavedFlag } from '@/services/savedService';
 
+// Simple seeded random for deterministic mock reviews per food
+function seededRandom(seed: number) {
+  let x = Math.sin(seed) * 10000;
+  return () => {
+    x = Math.sin(x) * 10000;
+    return x - Math.floor(x);
+  };
+}
+
+function hashString(str: string): number {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h << 5) - h + str.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h) || 1;
+}
+
+function generateMockReviews(foodKey: string, countMin = 2, countMax = 5) {
+  const names = [
+    'Ava P.', 'Liam W.', 'Noah D.', 'Emma S.', 'Olivia T.', 'Mason R.', 'Sophia L.', 'Isabella C.',
+    'Ethan H.', 'Mia B.', 'Lucas K.', 'Amelia N.', 'Harper J.', 'Elijah G.', 'Jackson M.', 'Charlotte V.',
+    'Sebastian Q.', 'Aria F.', 'Henry Z.', 'Layla E.'
+  ];
+  const comments = [
+    'Absolutely hit the spot. Great portion and flavor!',
+    'Solid choice. Would order again with extra sauce.',
+    'Super fresh and nicely seasoned. Worth the hype.',
+    'Good value and quick service. Slightly salty for me.',
+    'Loved it! Perfect texture and temperature.',
+    'Nice balance of flavors. Could use more spice.',
+    'Crispy and tender — exactly what I wanted.',
+    'Sauce was amazing. Portion could be bigger.',
+    'Great for sharing. Came out fast and hot.',
+    'My new go-to here. Highly recommend.'
+  ];
+
+  const seed = hashString(foodKey);
+  const rnd = seededRandom(seed);
+  const count = Math.floor(rnd() * (countMax - countMin + 1)) + countMin;
+  const now = Date.now();
+
+  const picks: any[] = [];
+  const usedIdx = new Set<number>();
+  for (let i = 0; i < count; i++) {
+    let nameIdx = Math.floor(rnd() * names.length);
+    while (usedIdx.has(nameIdx)) nameIdx = (nameIdx + 1) % names.length;
+    usedIdx.add(nameIdx);
+
+    const rating = Math.max(3, Math.round(rnd() * 5)); // 3-5 stars bias
+    const comment = comments[Math.floor(rnd() * comments.length)];
+    const daysAgo = Math.floor(rnd() * 120) + 1; // within ~4 months
+
+    picks.push({
+      id: `${foodKey}-${i}`,
+      rating,
+      text: comment,
+      created_at: new Date(now - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
+      profiles: { display_name: names[nameIdx], avatar_url: null }
+    });
+  }
+  return picks;
+}
+
 interface FoodDetailModalProps {
   foodId: string | null;
   isOpen: boolean;
@@ -56,26 +120,10 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
       if (foodError) throw foodError;
 
-      // Add sample reviews for demo
-      const sampleReviews = [
-        {
-          id: '1',
-          rating: 5,
-          text: 'Absolutely amazing! Best dish I\'ve had in West Lafayette.',
-          created_at: '2024-01-15T10:30:00Z',
-          profiles: { display_name: 'Sarah K.', avatar_url: null }
-        },
-        {
-          id: '2', 
-          rating: 4,
-          text: 'Really good, would definitely order again. Great portion size.',
-          created_at: '2024-01-10T15:45:00Z',
-          profiles: { display_name: 'Mike R.', avatar_url: null }
-        }
-      ];
-
       setFood(foodData);
-      setReviews(sampleReviews);
+      // Create deterministic mock reviews per food id or name
+      const key = foodData?.id || foodData?.name || 'food';
+      setReviews(generateMockReviews(String(key)));
     } catch (error) {
       console.error('Error fetching food details:', error);
       toast({
@@ -143,7 +191,6 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Prefer DB image, fall back to local asset if not provided
   const resolvedImage = food?.image_url || getLocalImageForFood(food?.name);
 
   return (
