@@ -13,9 +13,9 @@ One of the main challenges was working with a finite set of menus limited to Wes
 
 ## Accomplishments that we’re proud of
 We are proud of building a unique platform that shifts food reviews away from restaurants and onto dishes, offering a perspective that no major platform currently provides. We also successfully integrated AI personalization, location services, and gamification into one cohesive app experience. Dishly represents our ability to bring together design, functionality, and creativity into a working product in a short timeframe.
-What we learned
 
-## Working on Dishly taught us the importance of designing for scalability and user engagement. We learned how to effectively use Supabase with React and TypeScript for rapid development, and how to incorporate APIs like Google Maps and Open AI to enhance usability. Beyond the technical lessons, we discovered that gamification can be a powerful tool for encouraging user participation in a crowdsourced platform.
+## What we learned
+Working on Dishly taught us the importance of designing for scalability and user engagement. We learned how to effectively use Supabase with React and TypeScript for rapid development, and how to incorporate APIs like Google Maps and Open AI to enhance usability. Beyond the technical lessons, we discovered that gamification can be a powerful tool for encouraging user participation in a crowdsourced platform.
 
 ## What’s next for Dishly
 Future plans for Dishly include expanding beyond West Lafayette by allowing users themselves to input menus, making the platform scalable to a global audience. We also plan to implement promotional content, where restaurants can upload videos of their dishes with direct links to them in the app, as well as sponsored listings to support monetization. By refining our recommendation engine and growing the user base, Dishly can evolve into the go-to platform for honest, dish-focused reviews worldwide.
