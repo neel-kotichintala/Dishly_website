@@ -20,10 +20,6 @@ vite.config.ts
 postcss.config.js
 eslint.config.js
 
-# 
-
-
-
 
 # Editor directories and files
 .vscode/*
@@ -35,3 +31,6 @@ eslint.config.js
 *.njsproj
 *.sln
 *.sw?
+
+# Local image assets (not versioned)
+ImageFood/
