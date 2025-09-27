@@ -1,4 +1,4 @@
-# Dishly (Submitted to Hello World Hackathon 2025)- [DevPost](https://devpost.com/software/dishly-e9b31y)
+# Dishly - Neel Kotichintala & Paul Tutuc (Submitted to Hello World Hackathon 2025)- [DevPost](https://devpost.com/software/dishly-e9b31y)
 
 ## Inspiration
 Food reviews should reflect the dishes we actually eat, not just the restaurants they come from. Dishly was inspired by the idea of making food reviews more accurate and useful, focusing on individual dishes rather than the entire dining experience. Large platforms such as Yelp and Google Maps rate restaurants as a whole, meaning that factors like service, cleanliness, or wait time often overshadow the actual quality of the food. With Dishly, our goal is to eliminate these confounding factors and create a platform that highlights honest evaluations of dishes themselves.
